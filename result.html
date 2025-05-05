@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>每秒收入</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">您的每秒收入是：</h1>
+    <div id="rateDisplay" class="rate">—</div>
+    <div id="totalDisplay" class="total">$0.00</div>
+    <div class="buttons">
+      <button id="stopBtn">停止</button>
+    </div>
+  </div>
+
+  <script>
+    let intervalId;
+    let ratePerSecond = 0;
+    let totalEarned = 0;
+
+    function getQueryParams() {
+      const params = new URLSearchParams(window.location.search);
+      return {
+        salaryType: params.get('salaryType'),
+        salaryAmount: parseFloat(params.get('salaryAmount')),
+        daysPerMonth: parseFloat(params.get('daysPerMonth')),
+        hoursPerDay: parseFloat(params.get('hoursPerDay'))
+      };
+    }
+
+    function calculateRate({ salaryType, salaryAmount, daysPerMonth, hoursPerDay }) {
+      if (salaryType === 'hourly') {
+        return salaryAmount / 3600;
+      } else {
+        const totalSeconds = daysPerMonth * hoursPerDay * 3600 * 12; // 12 months
+        return salaryAmount / totalSeconds;
+      }
+    }
+
+    function startEarnings(rate) {
+      ratePerSecond = rate;
+      document.getElementById('rateDisplay').textContent = `每秒 $${ratePerSecond.toFixed(6)}`;
+      totalEarned = 0;
+      document.getElementById('totalDisplay').textContent = `$${totalEarned.toFixed(2)}`;
+
+      intervalId = setInterval(() => {
+        totalEarned += ratePerSecond;
+        document.getElementById('totalDisplay').textContent = `$${totalEarned.toFixed(2)}`;
+      }, 1000);
+    }
+
+    document.getElementById('stopBtn').addEventListener('click', () => {
+      clearInterval(intervalId);
+    });
+
+    const params = getQueryParams();
+    const rate = calculateRate(params);
+    startEarnings(rate);
+  </script>
+</body>
+</html>
