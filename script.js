@@ -1,54 +1,22 @@
-let intervalId;
-let ratePerSecond = 0;
-let totalEarned = 0;
+document.getElementById('trackerForm').addEventListener('submit', function(event) {
+  event.preventDefault();
 
-const salaryTypeEl   = document.getElementById('salaryType');
-const amountEl       = document.getElementById('salaryAmount');
-const daysEl         = document.getElementById('daysPerMonth');
-const hoursEl        = document.getElementById('hoursPerDay');
-const startBtn       = document.getElementById('startBtn');
-const stopBtn        = document.getElementById('stopBtn');
-const rateDisplay    = document.getElementById('rateDisplay');
-const totalDisplay   = document.getElementById('totalDisplay');
+  const salaryType = document.getElementById('salaryType').value;
+  const salaryAmount = parseFloat(document.getElementById('salaryAmount').value);
+  const daysPerMonth = parseFloat(document.getElementById('daysPerMonth').value);
+  const hoursPerDay = parseFloat(document.getElementById('hoursPerDay').value);
 
-function calculateRate() {
-  const type   = salaryTypeEl.value;
-  const amount = parseFloat(amountEl.value);
-  const days   = parseFloat(daysEl.value);
-  const hours  = parseFloat(hoursEl.value);
-
-  if (!amount || !days || !hours) {
-    alert('All fields must be greater than zero.');
-    return false;
+  if (!salaryAmount || !daysPerMonth || !hoursPerDay) {
+    alert('所有字段必须大于零。');
+    return;
   }
 
-  if (type === 'hourly') {
-    ratePerSecond = amount / 3600;
-  } else {
-    const totalSec = days * hours * 3600;
-    ratePerSecond = amount / totalSec;
-  }
+  const params = new URLSearchParams({
+    salaryType,
+    salaryAmount,
+    daysPerMonth,
+    hoursPerDay
+  });
 
-  rateDisplay.textContent = `Rate: $${ratePerSecond.toFixed(6)}/sec`;
-  totalEarned = 0;
-  totalDisplay.textContent = `$${totalEarned.toFixed(2)}`;
-  return true;
-}
-
-startBtn.addEventListener('click', () => {
-  if (!calculateRate()) return;
-
-  startBtn.disabled = true;
-  stopBtn.disabled  = false;
-
-  intervalId = setInterval(() => {
-    totalEarned += ratePerSecond;
-    totalDisplay.textContent = `$${totalEarned.toFixed(2)}`;
-  }, 1000);
-});
-
-stopBtn.addEventListener('click', () => {
-  clearInterval(intervalId);
-  startBtn.disabled = false;
-  stopBtn.disabled  = true;
+  window.location.href = `result.html?${params.toString()}`;
 });
