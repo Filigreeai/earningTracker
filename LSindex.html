@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Earnings-per-Second Tracker</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">Earnings-per-Second Tracker</h1>
+    <form id="trackerForm" class="form">
+      <label>
+        Salary Type
+        <select id="salaryType">
+          <option value="hourly">Hourly</option>
+          <option value="monthly">Monthly</option>
+        </select>
+      </label>
+
+      <label>
+        Amount
+        <input type="number" id="salaryAmount" placeholder="e.g. 25" required min="0.01" step="0.01" />
+      </label>
+
+      <label>
+        Work Days / Month
+        <input type="number" id="daysPerMonth" value="22" required min="1" />
+      </label>
+
+      <label>
+        Hours / Day
+        <input type="number" id="hoursPerDay" value="8" required min="1" step="0.1" />
+      </label>
+
+      <div class="buttons">
+        <button type="button" id="startBtn">Start</button>
+        <button type="button" id="stopBtn" disabled>Stop</button>
+      </div>
+    </form>
+
+    <div class="output">
+      <div id="rateDisplay" class="rate">—</div>
+      <div id="totalDisplay" class="total">$0.00</div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
